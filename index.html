@@ -34,7 +34,7 @@
               <a href="/">Overview</a>
             </li>
             <li >
-              <a href="/webui.html">Web UI</a>
+              <a href="web-ui.html">Web UI</a>
             </li>
             <li class="dropdown ">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">DSL <span class="caret"></span></a>
@@ -45,20 +45,29 @@
               </ul>
             </li>
             <li >
-              <a href="/webapi.html">Web API</a>
-            </li>
-            <li >
-              <a href="/howtos.html">Howtos</a>
+              <a href="web-api.html">Web API</a>
             </li>
             <li class="dropdown ">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Use cases <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="dsl-map.html">Map </a></li>
+                <li><a href="dsl-layer.html">Layer </a></li>
+                <li><a href="dsl-source.html">Source </a></li>
+              </ul>
+            </li>
+            <!-- li >
+              <a href="howtos.html">Howtos</a>
+            </li -->
+            <!-- li class="dropdown ">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="tools-map-managers.html">Map managers </a></li>
                 <li><a href="tools-installing.html">Installing </a></li>
               </ul>
-            </li>
+            </li -->
           </ul>
           <ul class="nav navbar-nav navbar-right">
+            <li><a href="demo/" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Demo');">Demo</a></li>
             <li><a href="https://templth.wordpress.com/category/apispark/summer-of-api/" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Blog');">Blog</a></li>
             <li><a href="https://github.com/templth/geo-open-data-viz" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Github');">Github</a></li>
           </ul>
@@ -80,48 +89,42 @@
       <div class="row">
         <div id="content" class="col-md-9" role="main">
           <div class="bs-docs-section">
-            <p>Use maps as a Service</p>
-            <p>The probject contains a set of modules:</p>
-            <p><div class="table-responsive"><table class="table table-bordered table-striped"><thead><tr><th>Modules</th><th>Description</th></tr></thead><tbody><tr></tr><tr><td>Web UI</td><td></td></tr><tr><td>Web API</td><td></td></tr><tr><td>Code generator</td><td></td></tr><tr><td>Installers</td><td></td></tr></tbody></table></div></p>
-            <h1 id="web-ui" class="page-header">Web UI</h1>
-            <p>The Web UI is the module that displays the configured maps.</p>
-            <h1 id="web-api" class="page-header">Web API</h1>
-            <p>The Web API allows to configure maps, their layers and the used sources. It leverages a
-dedicated DSL for the exchanged formats.</p>
-            <p>A complete description of this DSL is described in the documentation: <a href="http://">"Map DSL"</a> </p>
+            <h1 id="overview" class="page-header">Overview</h1>
+            <p>This project aims to provide support to create and manage your maps as a service. It
+provides an abstraction upon the raw-level technologies to display maps on the Web.
+With such approach, you don't need anymore the knowledge of these technologies.</p>
+            <p>The following figure provides the big picture of the project.</p>
+            <p style="text-align:center;"><img alt="Overview" src="map-dsl.png"></p>
+            <h1 id="modules" class="page-header">Modules</h1>
+            <h2 id="map-dsl" class="page-header">Map DSL</h2>
+            <p>A complete DSL (Domain Specific Language) that allows to define the map and its content
+without writing any line of code from D3.</p>
+            <p>See more details in the <a href="dsl.html">DSL section</a> of the documentation.</p>
+            <h2 id="web-api" class="page-header">Web API</h2>
+            <p>The Web API allows to configure maps, their layers and the used sources. It leverages the
+map DSL for the exchanged formats.</p>
             <p>This Web API can also contain data to display and link to maps.</p>
-            <h1 id="code-generator" class="page-header">Code generator</h1>
+            <h2 id="web-ui" class="page-header">Web UI</h2>
+            <p>The Web UI is the module that displays the configured maps.</p>
+            <h2 id="code-generator" class="page-header">Code generator</h2>
             <p>Generate D3 JavaScript code according to configured maps.</p>
-            <h1 id="tools" class="page-header">Tools</h1>
-            <h2 id="manage-your-maps-and-data" class="page-header">Manage your maps and data</h2>
-            <p>Install map and data sets</p>
-            <h2 id="install-mapvisualize-on-execution-platforms" class="page-header">Install MapVisualize on execution platforms</h2>
-            <p>Install application on executing platform like APISpark</p>
           </div>
         </div>
         <div id="right-nav" class="col-md-3" role="complementary">
           <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm">
             <ul class="nav bs-docs-sidenav">
               <li>
-                <a href="#web-ui">Web UI</a>
+                <a href="#overview">Overview</a>
                 <ul class="nav">
                 </ul>
               </li>
               <li>
-                <a href="#web-api">Web API</a>
+                <a href="#modules">Modules</a>
                 <ul class="nav">
-                </ul>
-              </li>
-              <li>
-                <a href="#code-generator">Code generator</a>
-                <ul class="nav">
-                </ul>
-              </li>
-              <li>
-                <a href="#tools">Tools</a>
-                <ul class="nav">
-                  <li><a href="#manage-your-maps-and-data">Manage your maps and data</a></li>
-                  <li><a href="#install-mapvisualize-on-execution-platforms">Install MapVisualize on execution platforms</a></li>
+                  <li><a href="#map-dsl">Map DSL</a></li>
+                  <li><a href="#web-api">Web API</a></li>
+                  <li><a href="#web-ui">Web UI</a></li>
+                  <li><a href="#code-generator">Code generator</a></li>
                 </ul>
               </li>
             </ul>

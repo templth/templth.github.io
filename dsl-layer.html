@@ -34,7 +34,7 @@
               <a href="/">Overview</a>
             </li>
             <li >
-              <a href="/webui.html">Web UI</a>
+              <a href="web-ui.html">Web UI</a>
             </li>
             <li class="dropdown active">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">DSL <span class="caret"></span></a>
@@ -45,20 +45,29 @@
               </ul>
             </li>
             <li >
-              <a href="/webapi.html">Web API</a>
+              <a href="web-api.html">Web API</a>
             </li>
-            <li >
-              <a href="/howtos.html">Howtos</a>
+            <li class="dropdown active">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Use cases <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="dsl-map.html">Map </a></li>
+                <li><a href="dsl-layer.html">Layer <span class="glyphicon glyphicon-ok"></span></a></li>
+                <li><a href="dsl-source.html">Source </a></li>
+              </ul>
             </li>
-            <li class="dropdown ">
+            <!-- li >
+              <a href="howtos.html">Howtos</a>
+            </li -->
+            <!-- li class="dropdown ">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="tools-map-managers.html">Map managers </a></li>
                 <li><a href="tools-installing.html">Installing </a></li>
               </ul>
-            </li>
+            </li -->
           </ul>
           <ul class="nav navbar-nav navbar-right">
+            <li><a href="demo/" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Demo');">Demo</a></li>
             <li><a href="https://templth.wordpress.com/category/apispark/summer-of-api/" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Blog');">Blog</a></li>
             <li><a href="https://github.com/templth/geo-open-data-viz" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Github');">Github</a></li>
           </ul>
@@ -82,32 +91,27 @@
           <div class="bs-docs-section">
             <h1 id="layer-configuration-parts" class="page-header">Layer configuration parts</h1>
             <h2 id="generic-informations" class="page-header">Generic informations</h2>
-            <p>Some hints allow to configure the map itself, initial display and
-its behavior.</p>
-            <p>// TODO: add a table</p>
+            <p>Some hints allow to configure the layer itself, its type and its link with maps.</p>
             <p>Here is a sample configuration of these hints:</p>
             <div class="highlight"><pre><code class="language-js" data-lang="js">{
-  id: '1',
-  name: 'World',
-  type: 'd3js',
-  projection: 'orthographic',
-  scale: 420,
-  center: {
-    lon: 60,
-    lat: -30
-  },
-  interactions: {
-    moving: 'mouseMove',
-    zooming: 'mouseWheel'
-  },
+  "id": "graticuleLayer",
+  "type": "graticule",
+  "rank": 1,
+  "name": "Graticule",
+  "applied": true,
+  "visible": true,
+  "maps": [
+    "1"
+  ],
   (...)
 }</code></pre></div>
+            <p>A layer can be composed with several parts that deal with specific parts. Not all are
+required with each layer type.</p>
+            <p style="text-align:center;"><img alt="Layer parts" src="layer-parts.png"></p>
             <h2 id="display-configuration" class="page-header">Display configuration</h2>
             <p>The display section of layers allows to configure a set of elements that will
 be displayed on the map.</p>
-            <p><div class="table-responsive"><table class="table table-bordered table-striped"><thead><tr><th>Feature</th><th>Description</th></tr></thead><tbody><tr></tr><tr><td><a href="#geo-data">Geo data</a></td><td></td></tr><tr><td><a href="fill">Fill</a></td><td></td></tr><tr><td><a href="#shape">Shapes</a></td><td></td></tr><tr><td><a href="#colors">Colors</a></td><td></td></tr><tr><td><a href="#legend">Legend</a></td><td></td></tr><tr><td><a href="#tooltip">Tooltip</a></td><td></td></tr></tbody></table></div></p>
-            <h3 id="geo-data" class="page-header">Geo data</h3>
-            <p>TODO</p>
+            <p><div class="table-responsive"><table class="table table-bordered table-striped"><thead><tr><th>Feature</th><th>Description</th></tr></thead><tbody><tr></tr><tr><td><a href="#fill">Fill</a></td><td>Defines the strategy to use to fill shapes</td></tr><tr><td><a href="#shape">Shape</a></td><td>Defines shapes</td></tr><tr><td><a href="#legend">Legend</a></td><td>Defines the legend associated with a layer</td></tr><tr><td><a href="#tooltip">Tooltip</a></td><td>Defines the tooltip associated with elements of a layer</td></tr></tbody></table></div></p>
             <h3 id="fill" class="page-header">Fill</h3>
             <div class="highlight"><pre><code class="language-js" data-lang="js">{
   (...)
@@ -124,7 +128,8 @@ be displayed on the map.</p>
   (...)
 }</code></pre></div>
             <h3 id="shape" class="page-header">Shape</h3>
-            <p>Supported shapes</p>
+            <p>Several kinds of shapes are supported. They all take into account the configured projection
+of the map.</p>
             <p><div class="table-responsive"><table class="table table-bordered table-striped"><thead><tr><th>Shape</th><th>Description</th></tr></thead><tbody><tr></tr><tr><td><a href="#circle">Circle</a></td><td></td></tr><tr><td><a href="#polygon">Polygon</a></td><td></td></tr><tr><td><a href="#line">Line</a></td><td></td></tr></tbody></table></div></p>
             <h4 id="circle" class="page-header">Circle</h4>
             <p>Here are the supported features for the circle shape:</p>
@@ -243,13 +248,6 @@ updated to a choropleth one.</p>
   }
   (...)
 }</code></pre></div>
-            <h3 id="colors" class="page-header">Colors</h3>
-            <h4 id="fixed" class="page-header">Fixed</h4>
-            <p>TODO</p>
-            <h4 id="conditional" class="page-header">Conditional</h4>
-            <p>TODO</p>
-            <h4 id="threshold" class="page-header">Threshold</h4>
-            <p>TODO</p>
             <h3 id="legend" class="page-header">Legend</h3>
             <p>In most cases, we use a set of colors (threshold or choropleth) to display data.
 This really makes sense to define a legend in such cases to tell which values
@@ -314,6 +312,25 @@ sets are used to deduce geo data.</p>
   },
   (...)
 }</code></pre></div>
+            <p>Within TopoJSON files, properties can be defined for each shape. If it's not
+the case, you can leverage the attribute <code>properties</code>. The link between the shape
+and the additional properties is done using identifiers.</p>
+            <div class="highlight"><pre><code class="language-js" data-lang="js">{
+  (...)
+  "data": {
+    "source": "us-counties",
+    "url": "\"http://localhost:9000/scripts/json/us/us-counties.json\"",
+    "properties": {
+      "url": "\"http://localhost:9000/scripts/json/us/us-county-names2.csv\"",
+      "type": "csv"
+    },
+    "rootObject": "counties",
+    "type": "topojson",
+    "content": [],
+    "loaded": false
+  }
+  (...)
+}</code></pre></div>
             <p>Data used by the layer can be also defined inline using the attribute
 <code>inline</code>. The corresponding value corresponds to a JSON object as string.
 In the future, both strings and literal JSON objects will be supported.</p>
@@ -350,24 +367,19 @@ legends or tooltips.</p>
   (...)
 }</code></pre></div>
             <h2 id="behavior-configuration" class="page-header">Behavior configuration</h2>
+            <p>This section describes the way to configure the interaction between a user and a
+layer.</p>
             <div class="highlight"><pre><code class="language-js" data-lang="js">{
   (...)
-  behavior: {
-    zoomBoundingBox: {
-      display: 'click'
-      //display: 'mouseOver',
-      //hide: 'mouseOut'
-    }
-  }
-  (...)
-}</code></pre></div>
-            <div class="highlight"><pre><code class="language-js" data-lang="js">{
-  (...)
-  behavior: {
-    tooltip: {
-      display: 'click'
-      //display: 'mouseOver',
-      //hide: 'mouseOut'
+  "events": {
+    "click": {
+      "display": "subMap"
+    },
+    "mouseover": {
+      "display": "tooltip"
+    },
+    "mouseout": {
+      "hide": "tooltip"
     }
   }
   (...)
@@ -375,9 +387,10 @@ legends or tooltips.</p>
             <h1 id="layer-kinds" class="page-header">Layer kinds</h1>
             <p>The layers leverage some of elements described in section "Generic informations" to
 configure themselves. Here are the list of supported layer kinds:</p>
-            <p><div class="table-responsive"><table class="table table-bordered table-striped"><thead><tr><th>Layer kind</th><th>Description</th></tr></thead><tbody><tr></tr><tr><td>Graticule</td></tr></tbody></table></div></p>
+            <p><div class="table-responsive"><table class="table table-bordered table-striped"><thead><tr><th>Layer kind</th><th>Description</th></tr></thead><tbody><tr></tr><tr><td><a href="#graticule-layer">Graticule</a></td><td>Defines a graticule to display world background and / or  longitude / latitude lines</td></tr><tr><td><a href="#geodata-layer">Geodata</a></td><td>Displays data from TopoJSON files</td></tr><tr><td><a href="#fill-layer">Fill</a></td><td>Fills shapes based on data files</td></tr><tr><td><a href="#objects-layer">Objects</a></td><td>Displays shapes like circles or lines on maps</td></tr></tbody></table></div></p>
             <p>Following sub sections describe the way to configure these layers.</p>
             <h2 id="graticule-layer" class="page-header">Graticule layer</h2>
+            <p>Sample graticule layer with lines and background color:</p>
             <div class="highlight"><pre><code class="language-js" data-lang="js">{
   id: 'graticuleLayer',
   type: 'graticule',
@@ -407,6 +420,7 @@ configure themselves. Here are the list of supported layer kinds:</p>
   }
 }</code></pre></div>
             <h2 id="geodata-layer" class="page-header">Geodata layer</h2>
+            <p>Sample geodata layer that display all country borders using a TopoJSON file:</p>
             <div class="highlight"><pre><code class="language-js" data-lang="js">{
   id: 'worldLayer',
   type: 'geodata',
@@ -439,6 +453,8 @@ configure themselves. Here are the list of supported layer kinds:</p>
   visible: true
 }</code></pre></div>
             <h2 id="fill-layer" class="page-header">Fill layer</h2>
+            <p>Sample fill layer that define a specific background for each shape element
+based on a threshold approach:</p>
             <div class="highlight"><pre><code class="language-js" data-lang="js">{
   id: 'layer2',
   type: 'data',
@@ -486,6 +502,8 @@ configure themselves. Here are the list of supported layer kinds:</p>
   visible: true
 }</code></pre></div>
             <h2 id="objects-layer" class="page-header">Objects layer</h2>
+            <p>Sample object layer that displays circle shapes for each element of
+a CSV file:</p>
             <div class="highlight"><pre><code class="language-js" data-lang="js">{
   id: 'meteorites',
   type: 'data',
