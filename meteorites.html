@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional Bootstrap Theme -->
+    <link href="data:text/css;charset=utf-8," data-href="http://getbootstrap.com/dist/css/bootstrap-theme.min.css" rel="stylesheet" id="bs-theme-stylesheet">
+    <!-- Documentation extras -->
+    <link href="http://getbootstrap.com/assets/css/docs.min.css" rel="stylesheet">
+    <!--[if lt IE 9]><script src="../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="http://getbootstrap.com/assets/js/ie-emulation-modes-warning.js"></script>
+  </head>
+
+  <body class="map" data-spy="scroll" data-target="#right-nav">
+    <!-- Header -->
+    <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+      <div class="container">
+        <div class="navbar-header">
+          <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="." class="navbar-brand">Geo data vizualiser</a>
+        </div>
+        <nav id="bs-navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li >
+              <a href="/">Overview</a>
+            </li>
+            <li >
+              <a href="web-ui.html">Web UI</a>
+            </li>
+            <li class="dropdown ">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">DSL <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="dsl-map.html">Map </a></li>
+                <li><a href="dsl-layer.html">Layer </a></li>
+                <li><a href="dsl-source.html">Source </a></li>
+              </ul>
+            </li>
+            <li >
+              <a href="web-api.html">Web API</a>
+            </li>
+            <li class="dropdown ">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Use cases <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="meteorites.html">Visualizing meteorites <span class="glyphicon glyphicon-ok"></span></a></li>
+              </ul>
+            </li>
+            <!-- li >
+              <a href="howtos.html">Howtos</a>
+            </li -->
+            <!-- li class="dropdown ">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="tools-map-managers.html">Map managers </a></li>
+                <li><a href="tools-installing.html">Installing </a></li>
+              </ul>
+            </li -->
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="demo/" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Demo');">Demo</a></li>
+            <li><a href="https://templth.wordpress.com/category/apispark/summer-of-api/" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Blog');">Blog</a></li>
+            <li><a href="https://github.com/templth/geo-open-data-viz" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Github');">Github</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <!-- End header -->
+
+    <!-- Docs page layout -->
+    <div class="bs-docs-header" id="content" tabindex="-1" style="background-image:url(banner.png); background-repeat:no-repeat;background-position:100% 0%;background-size: cover; ">
+      <div class="container" style="background-color: rgba(0, 0, 0, .5);">
+        <h1>Visualizing meteorites</h1>
+        <p>Visualizing where meteorites felt</p>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="container bs-docs-container">
+      <div class="row">
+        <div id="content" class="col-md-9" role="main">
+          <div class="bs-docs-section">
+            <h1 id="visualizing-meteorites" class="page-header">Visualizing meteorites</h1>
+            <p>NASA provides enteresting datasets. Of course, there are a lot of things about space but we can also find out some data about earth itself, specially about meteorites. This dataset can be reached at this address: <a href="https://data.nasa.gov/Space-Science/Meteorite-Landings/gh4g-9sfh">https://data.nasa.gov/Space-Science/Meteorite-Landings/gh4g-9sfh</a>.</p>
+            <p>We found that it would be fun to see on a map if some meteorites launded around and to play with such data.</p>
+            <p>Let's start with the map itself.</p>
+            <h2 id="preparing-the-map" class="page-header">Preparing the map</h2>
+            <p>As you can see on the previous figure, there are two dedicated resources for maps:</p>
+            <p><ul><li>One to list and create them</li><li>Another one to manage them (update, delete, ...)</li></ul></p>
+            <p>To create our map, we will leverage the first one with the following content:</p>
+            <div class="highlight"><pre><code class="language-js" data-lang="js">POST /maps/
+(Content-Type: application/json)
+{
+    "id": "1",
+    "name": "World",
+    "type: "d3js",
+    "projection": "orthographic",
+    "scale": 250,
+    "interactions": {
+        "moving": "drag",
+        "zooming": "mouveWheel"
+    }
+}</code></pre></div>
+            <p>This content gives some hints about the map we want to create like its projection, its initial scale and the way to interact wth it. We choose here to enable both zooming (with the mouse wheel) and moving (with drag'n drop).</p>
+            <p>Whereas we have our map created, nothing appears since there is no content in it. Within our application, content corresponds to layers that can be map data like continents boundaries and raw data like rates or geographical positions (longitude, latitude).</p>
+            <p>We will now create all these layers.</p>
+            <h2 id="defining-background-layers" class="page-header">Defining background layers</h2>
+            <p>The projection <code>orthographic</code> is really great since it allows to see earth as a globe. To make this more beautiful, we will add some blue background for oceans and draw the shapes of continents.</p>
+            <p>To visualize the globe, we need first to create a graticule layer. This is the term for this in D3.js (<a href="http://d3js.org/">http://d3js.org/</a>), the underlying library we use.</p>
+            <p>Like for maps, we have similar resources for map layers. We have separate resources since layers can be used against several maps.</p>
+            <p>To create our layer, we will leverage the method POST of the list resource with the following content. We specify in some hints to configure what we want to display (background, lines and globe border) and some styles to define colors and line properties. Don't forget to set the identifier of the map as reference.</p>
+            <div class="highlight"><pre><code class="language-js" data-lang="js">POST /layers/
+(Content-Type: application/json)
+{
+    "id": "graticuleLayer",
+    "type": "graticule",
+    "name": "Graticule",
+    "applyOn": "layers",
+    "applied": true,
+    "visible": true,
+    "maps": [
+        "067e6162-3b6f-4ae2-a171-2470b63dff00"
+    ],
+    "display": {
+        "background": true,
+        "lines": true,
+        "border": true
+    },
+    "styles": {
+        "background": {
+            "fill": "#a4bac7"
+        },
+        "border": {
+            "stroke": "#000",
+            "strokeWidth": "3px"
+        },
+        "lines": {
+            "stroke": "#777",
+            "strokeWidth": ".5px",
+            "strokeOpacity": ".5"
+        }
+    }
+}</code></pre></div>
+            <p>Now this first layer created. Our map looks like this.</p>
+            <p style="text-align:center;"><img alt="Meteorites graticule" src="screenshots/meteorites-01-layer-graticule-s.png"></p>
+            <p>Looks promising but there are still layers to define! The next step is to configure shapes for continents. D3 comes with a lot of samples of maps and specially, one for continents. The corresponding file provides data defined with format <a href="https://github.com/mbostock/topojson">TopoJSON</a>, "an extension of GeoJSON that encodes topology. Rather than representing geometries discretely, geometries in TopoJSON files are stitched together from shared line segments called arcs" (quoted from the TopoJSON web site).</p>
+            <p>Based on this file (that we imported within a folder of our Web API), we can create a new layer for GeoData. This layer is quite simple since we almost need to reference the file and tell the root object within the file we want to use (here <code>countries</code>).</p>
+            <div class="highlight"><pre><code class="language-js" data-lang="js">POST /layers/
+(Content-Type: application/json)
+{
+    "id": "worldLayer",
+    "type": "geodata",
+    "name": "World",
+    "applyOn": "layers",
+    "applied": true,
+    "visible": true,
+    "data": {
+        "url": "http://mapapi.apispark-dev.com:8182/files/continent.json",
+        "rootObject": "countries",
+        "type": "topojson"
+    }
+}</code></pre></div>
+            <p>Now this second layer created. We can see continents displayed on our map.</p>
+            <p>!(Meteorites continent)</p>
+            <p>We have now the foundations of our map created. Let's actually dive into ou dataset.</p>
+            <h2 id="defining-the-layer-for-meteorites" class="page-header">Defining the layer for meteorites</h2>
+            <p>We downloaded the file from the NASA web site. The file contains 34,513 meteorites and its structure is provided below:</p>
+            <p><ul><li>: the place where the meteorite fell</li><li>: the identifier</li><li>: 'valid' is for most meteorites and 'relict' are for objects that were once meteorites but are now highly altered by weathering on Earth</li><li>: the type of the meteorite</li><li>: the mass of the meteorite (in grammes)</li><li>: the year of fall</li><li>: the latitude</li><li>: the longiturde</li><li>: the complete geo location (latitude and longitude)</li></ul></p>
+            <p>For simplicity, we directly uploaded the file of the dataset within a folder of our Web API with the path <code>/data</code> (it's an example). We could go further and create a dedicated entity to store such data and upload then them using the bulk import of the entity browser. This will the subject of a next post...</p>
+            <p>In attribute values, expressions can be provided. In this context, <code>d</code> corresponds to the current data of elements and contains all hints regarding this current row.</p>
+            <p>The first section of the layer configuration consists in data. We specify here the data file to load for this layer and some hints to filter and sort data. As a matter of fact, since there is an important gap within mass of meteorites, we need to display subset of data to make the map readable.</p>
+            <div class="highlight"><pre><code class="language-js" data-lang="js">POST /layers/
+(Content-Type: application/json)
+{
+    "id": "meteorites",
+    "type": "data",
+    "mode": "objects",
+    "name": "Meteorites",
+    "data": {
+        "url": "http://mapapi.apispark-dev.com:8182/files/Meteorite_Landings.csv",
+        "type": "csv",
+        "source": "meteoritesSource",
+        "where": "d.mass > 10000",
+        "order": {
+            "field": "mass",
+            "ascending": false
+        }
+    },
+    (...)
+    "applyOn": "layers",
+    "applied": true,
+    "visible": true
+}</code></pre></div>
+            <p>The second section is about what we want to display and how. We want to draw a circle for each meteorite at the place where it fell. The radius of the circle is proportional with its mass and the background color dependent on the year of landing. The more the date is close from now, the more the color is close from red.</p>
+            <p>Color transition is handled by the threshold feature of D3 configured using a palette. Some beautiful palettes are provided by the link: <a href="http://bl.ocks.org/mbostock/5577023">http://bl.ocks.org/mbostock/5577023</a>.</p>
+            <p>Following snippet provides the complete configuration of this shape:</p>
+            <div class="highlight"><pre><code class="language-js" data-lang="js">{
+    "id": "meteorites",
+    "type": "data",
+    "mode": "objects",
+    "name": "Meteorites",
+    (...)
+    "display": {
+        "shape": {
+            "type": "circle",
+            "radius": "d.mass / 5000000",
+            "origin": "[ d.reclong, d.reclat ]",
+            "opacity": 0.75,
+            "threshold": {
+                "code": "YlOrRd",
+                "values": [ 1800, 1900, 1950, 2000, 2015 ],
+                "colors": [ "#ffffb2", "#fed976", "#feb24c",
+                                   "#fd8d3c", "#f03b20", "#bd0026" ]
+            },
+            "value": "parseDate(d.year).getFullYear()"
+        }
+    },
+    (...)
+    "applyOn": "layers",
+    "applied": true,
+    "visible": true
+}</code></pre></div>
+            <p>Now this third layer created. We can see where big meteorites fell on our map.</p>
+            <p style="text-align:center;"><img alt="Meteorites" src="screenshots/meteorites-03-meteorites-africa-asia-all-s.png"></p>
+            <p>We can add more hints about the displayed data like the color legend and tooltip providing the complete data for the meteorite landing. To add this to the map, we simply need to add sections <code>legend</code> and <code>tooltip</code>, as described below. In this case, we need to leverage the method PUT of the single resource with the layer content. We can notice that all the content of the layer needs to be specified as payload of the request.</p>
+            <div class="highlight"><pre><code class="language-js" data-lang="js">PUT /layers/meteorites
+(Content-Type: application/json)
+{
+    "id": "meteorites",
+    "type": "data",
+    "mode": "objects",
+    "name": "Meteorites",
+    (...)
+    "display": {
+        (...)
+        "legend": {
+            "enabled": true,
+            "label": "d"
+         },
+         "tooltip": {
+            "enabled": true,
+            "text": "'Name: '+d.name+'<br/>Year: '+d.year+'<br/>Mass (g): '+d.mass"
+        }
+    }
+    (...)
+}</code></pre></div>
+            <p>To finish, let's configure the interaction of the layer. It simply corresponds to specify that we want to display the tooltip area when clicking on circles.</p>
+            <div class="highlight"><pre><code class="language-js" data-lang="js">{
+    "id": "meteorites",
+    "type": "data",
+    "mode": "objects",
+    "name": "Meteorites",
+    (...)
+    "behavior": {
+        "tooltip": {
+            "display": "click"
+        }
+    },
+    (...)
+}</code></pre></div>
+            <p>Let's have a look at our map.</p>
+            <p style="text-align:center;"><img alt="Meteorites" src="screenshots/meteorites-04-meteorites-america-all-s.png"></p>
+            <p>The big advantage of such approach is that we can easily configure the data to display and the way to display them to be relevant. We will show now how to play with subsets of data.</p>
+            <h2 id="playing-with-data" class="page-header">Playing with data</h2>
+            <p>As we can see, there is an important gap between masses of meteorites. In last sections, we mainly displayed the big ones. Restricting the data to display small ones allows to show a different representation of meteorites datas.</p>
+            <p>We will display here meteorites that have mass inferior to 50kg. We simply need to update the attribute <code>where</code> in the section <code>data</code>: 'd.mass < 50000' instead of 'd.mass > 10000'. In this case, we need to increase a bit the radius of displayed circles: 'd.mass / 50000' instead of 'd.mass / 5000000'.</p>
+            <p>Below are the two updated sections within the map definition:</p>
+            <div class="highlight"><pre><code class="language-js" data-lang="js">{
+    (...)
+    "data": {
+        "url": "http://mapapi.apispark-dev.com:8182/files/Meteorite_Landings.csv",
+        "type": "csv",
+        "where": "d.mass < 50000",
+        "order": {
+            "field": "mass",
+            "ascending": false
+        }
+    },
+    "display": {
+        "shape": {
+            "type": "circle",
+            "radius": "d.mass / 50000",
+            "origin": "[ d.reclong, d.reclat ]",
+            "opacity": 0.75,
+            "threshold": {
+                "code": "YlOrRd",
+                "values": [ 1800, 1900, 1950, 2000, 2015 ],
+                "colors": [ "#ffffb2", "#fed976", "#feb24c",
+                                  "#fd8d3c", "#f03b20", "#bd0026" ]
+            },
+            "value": "parseDate(d.year).getFullYear()"
+        },
+        (...)
+    },
+    (...)
+}</code></pre></div>
+            <p>By reloading data, we have now the following map.</p>
+            <p style="text-align:center;"><img alt="Meteorites" src="screenshots/meteorites-05-meteorites-america-small-s.png"></p>
+            <p style="text-align:center;"><img alt="Meteorites" src="screenshots/meteorites-06-meteorites-asia-australia-small-s.png"></p>
+            <p style="text-align:center;"><img alt="Meteorites" src="screenshots/meteorites-07-meteorites-europa-africa-small-s.png"></p>
+            <p style="text-align:center;"><img alt="Meteorites" src="screenshots/meteorites-08-meteorites-europa-africa-small-tooltip-s.png"></p>
+            <p>In this case, the map is less reactive since there are much more data to display. Some optimizations would be interesting like only applying data on the map for the displayed area.</p>
+          </div>
+        </div>
+        <div id="right-nav" class="col-md-3" role="complementary">
+          <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm">
+            <ul class="nav bs-docs-sidenav">
+              <li>
+                <a href="#visualizing-meteorites">Visualizing meteorites</a>
+                <ul class="nav">
+                  <li><a href="#preparing-the-map">Preparing the map</a></li>
+                  <li><a href="#defining-background-layers">Defining background layers</a></li>
+                  <li><a href="#defining-the-layer-for-meteorites">Defining the layer for meteorites</a></li>
+                  <li><a href="#playing-with-data">Playing with data</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a class="back-to-top" href="#top">
+              Back to top
+            </a>
+          </nav>
+
+        </div>
+      </div>
+    </div>
+    <!-- End content-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+    <script src="http://getbootstrap.com/assets/js/docs.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+
+    <!--script>
+      window.twttr = (function (d,s,id) {
+        var t, js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return; js=d.createElement(s); js.id=id; js.async=1;
+        js.src="https://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs);
+        return window.twttr || (t = { _e: [], ready: function(f){ t._e.push(f) } });
+      }(document, "script", "twitter-wjs"));
+    </script -->
+
+    <!-- Analytics
+    ================================================== -->
+    <script>
+      /*var _gauges = _gauges || [];
+      (function() {
+        var t   = document.createElement('script');
+        t.async = true;
+        t.id    = 'gauges-tracker';
+        t.setAttribute('data-site-id', '4f0dc9fef5a1f55508000013');
+        t.src = '//secure.gaug.es/track.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(t, s);
+      })();*/
+    </script>
+  </body>
+</html>
