@@ -128,7 +128,7 @@ be displayed on the map.</p>
             <h3 id="shape" class="page-header">Shape</h3>
             <p>Several kinds of shapes are supported. They all take into account the configured projection
 of the map.</p>
-            <p><div class="table-responsive"><table class="table table-bordered table-striped"><thead><tr><th>Shape</th><th>Description</th></tr></thead><tbody><tr></tr><tr><td><a href="#circle">Circle</a></td><td></td></tr><tr><td><a href="#polygon">Polygon</a></td><td></td></tr><tr><td><a href="#line">Line</a></td><td></td></tr></tbody></table></div></p>
+            <p><div class="table-responsive"><table class="table table-bordered table-striped"><thead><tr><th>Shape</th><th>Description</th></tr></thead><tbody><tr></tr><tr><td><a href="#circle">Circle</a></td><td>Defines a circle (that takes into account projection)</td></tr><tr><td><a href="#polygon">Polygon</a></td><td>Defines a polygon</td></tr><tr><td><a href="#line">Line</a></td><td>Defines a line</td></tr></tbody></table></div></p>
             <h4 id="circle" class="page-header">Circle</h4>
             <p>Here are the supported features for the circle shape:</p>
             <p><div class="table-responsive"><table class="table table-bordered table-striped"><thead><tr><th>Feature</th><th>Value</th><th>Example</th><th>Description</th></tr></thead><tbody><tr></tr><tr><td>Origin</td><td><a href="#expressions">Expr</a></td><td><code>\[ d.reclong, d.reclat \]</code></td><td>Corresponds to the point where circles are positionned. Corresponding expressions need to leverage attributes in the dataset to define the position.</td></tr><tr><td>Radius</td><td>Val | <a href="#expressions">Expr</a></td><td><code>d.mass / 5000000</code> or <code>10</code></td><td>Corresponds to the radius of circles. It can be fixed or dependent of the attributes of the dataset.</td></tr><tr><td>Color</td><td>Val | <a href="#expressions">Expr</a></td><td></td><td>Corresponds to the color of circles. It can be the same for all circles or or dependent of the attributes of the dataset. Strategies like threshold or choropleth are supported.</td></tr><tr><td>Opacity</td><td>Val</td><td><code>0.75</code></td><td>Corresponds to the opacity of the elements. It's a value between <code>0</code> (transparent) and <code>1</code> (opaque)</td></tr></tbody></table></div></p>
@@ -187,7 +187,7 @@ updated to a choropleth one.</p>
   (...)
 }</code></pre></div>
             <h4 id="polygon" class="page-header">Polygon</h4>
-            <p>TODO</p>
+            <p>Defines a polygon from a set of points taken from data.</p>
             <div class="highlight"><pre><code class="language-js" data-lang="js">{
   (...)
   display: {
@@ -234,7 +234,7 @@ updated to a choropleth one.</p>
   (...)
 }</code></pre></div>
             <h4 id="line" class="page-header">Line</h4>
-            <p>TODO</p>
+            <p>Defines a line from a set of points taken from data.</p>
             <div class="highlight"><pre><code class="language-js" data-lang="js">{
   (...)
   display: {
@@ -293,7 +293,6 @@ a behavior for the layer to tell when and how the tooltip will be displayed.</p>
             <p>Most of layers rely on data. This can be either geo data that represent
 shapes, lines... but also data sets that we need to apply on a map. Such data
 sets are used to deduce geo data.</p>
-            <p>// TODO: add a table</p>
             <p>Here is a sample configuration of data source:</p>
             <div class="highlight"><pre><code class="language-js" data-lang="js">{
   (...)
@@ -628,7 +627,11 @@ be an object with the possible following attributes:</p>
   (...)
 }</code></pre></div>
             <h1 id="sub-maps" class="page-header">Sub maps</h1>
-            <p>TODO</p>
+            <p>Defines a sub map from a geodata layer. This map will be displayed on the top
+of the previous one and will contain the current shape (for example a country that
+was clicked).</p>
+            <p>You specify in its definition which layers to display and context variables you
+want to use within expressions of sub layers.</p>
             <div class="highlight"><pre><code class="language-js" data-lang="js">{
   (...)
   display: {
@@ -638,17 +641,20 @@ be an object with the possible following attributes:</p>
         'layer2'
       ],
       variables: [
-        bounds: 
+        bounds,
+        shape
       ]
     }
   },
   (...)
 }</code></pre></div>
+            <p>The configuration of when to display the sub map is configured within the <code>behavior</code> block.</p>
             <div class="highlight"><pre><code class="language-js" data-lang="js">{
   (...)
   behavior: {
-    subMap: {
-      display: 'dblclick'
+    events: {
+      click: {
+        display: 'subMap'
     }
   }
   (...)
